@@ -1,6 +1,6 @@
 ---
 name : sensu
 description : st2 content pack containing sensu integrations
-version : 0.1
+version : 0.1.0
 author : st2-dev
 email : info@stackstorm.com
