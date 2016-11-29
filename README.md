@@ -15,11 +15,13 @@ Sensu and StackStorm, up and running. See installation for [Sensu](http://sensua
 
 1. Install the [Sensu pack](https://github.com/StackStorm-Exchange/stackstorm-sensu):
 
-       # Install sensu
-       st2 pack install sensu
+    ```
+    # Install sensu
+    st2 pack install sensu
 
-       # Check it:
-       st2 action list --pack=sensu
+    # Check it:
+    st2 action list --pack=sensu
+    ```
 
 2. Copy the example configuration in [sensu.yaml.example](./sensu.yaml.example)
 to `/opt/stackstorm/configs/sensu.yaml` and edit as required. It must contain:
