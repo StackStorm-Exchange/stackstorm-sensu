@@ -13,10 +13,10 @@ Sensu and StackStorm, up and running. See installation for [Sensu](http://sensua
 ## Setup
 ### Install Sensu pack on StackStorm
 
-1. Install Sensu Pack [StackStorm sensu integration
-    pack](https://github.com/StackStorm/st2contrib/tree/master/packs/sensu):
+1. Install the [Sensu pack](https://github.com/StackStorm-Exchange/stackstorm-sensu):
 
-	    st2 run packs.install packs=sensu
+	    # Install sensu
+            st2 pack install sensu
 
 	    # Check it:
 	    st2 action list --pack=sensu
