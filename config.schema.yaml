@@ -6,7 +6,7 @@
     required: true
   port:
     description: "Sensu API port (default 4567)"
-    type: "string"
+    type: "integer"
     secret: false
     required: true
     default: 4567
