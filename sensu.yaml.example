@@ -1,7 +1,7 @@
 ---
 # Sensu API connection info
 host: "localhost"
-port: "4567"
+port: 4567
 user: ""
 pass: ""
 ssl: false
