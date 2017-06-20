@@ -1,6 +1,6 @@
 ---
 name: event_info
-runner_type: run-python
+runner_type: python-script
 description: Get Sensu event info
 enabled: true
 entry_point: event_info.py

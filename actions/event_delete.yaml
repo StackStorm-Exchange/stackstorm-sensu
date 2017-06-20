@@ -1,6 +1,6 @@
 ---
 name: event_delete
-runner_type: run-python
+runner_type: python-script
 description: Delete a Sensu event
 enabled: true
 entry_point: event_delete.py

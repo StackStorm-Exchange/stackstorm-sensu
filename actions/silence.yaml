@@ -1,6 +1,6 @@
 ---
 name: silence
-runner_type: run-python
+runner_type: python-script
 description: Silence a Sensu client or check
 enabled: true
 entry_point: silence.py

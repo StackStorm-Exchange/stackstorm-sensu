@@ -1,6 +1,6 @@
 ---
 name: check_list
-runner_type: run-python
+runner_type: python-script
 description: List Sensu checks
 enabled: true
 entry_point: check_list.py

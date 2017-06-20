@@ -1,6 +1,6 @@
 ---
 name: aggregate_list
-runner_type: run-python
+runner_type: python-script
 description: List Sensu Aggregate Stats
 enabled: true
 entry_point: aggregate_list.py

@@ -1,6 +1,6 @@
 ---
 name: info
-runner_type: run-python
+runner_type: python-script
 description: Sensu System Info
 enabled: true
 entry_point: info.py
