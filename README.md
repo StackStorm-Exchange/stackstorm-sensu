@@ -32,6 +32,10 @@ to `/opt/stackstorm/configs/sensu.yaml` and edit as required. It must contain:
 * ``pass`` - Sensu integration password
 * ``ssl`` - Whether to verify the Sensu SSL certificate or not
 
+**Note** : When modifying the configuration in `/opt/stackstorm/configs/` please
+           remember to tell StackStorm to load these new values by running
+           `st2ctl reload --register-configs`
+
 3. Check that the actions work:
 
     ```

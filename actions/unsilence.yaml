@@ -1,6 +1,6 @@
 ---
 name: unsilence
-runner_type: run-python
+runner_type: python-script
 description: Unsilence a Sensu client or check
 enabled: true
 entry_point: unsilence.py

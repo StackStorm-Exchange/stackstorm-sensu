@@ -1,6 +1,6 @@
 ---
 name: check_aggregates
-runner_type: run-python
+runner_type: python-script
 description: Get Sensu check aggregates
 enabled: true
 entry_point: aggregate_check.py

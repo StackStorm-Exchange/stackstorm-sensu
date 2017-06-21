@@ -1,6 +1,6 @@
 ---
 name: check_request
-runner_type: run-python
+runner_type: python-script
 description: Schedule a Sensu check request
 enabled: true
 entry_point: check_request.py

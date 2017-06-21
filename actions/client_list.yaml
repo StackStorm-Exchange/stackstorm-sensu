@@ -1,6 +1,6 @@
 ---
 name: client_list
-runner_type: run-python
+runner_type: python-script
 description: List Sensu clients
 enabled: true
 entry_point: client_list.py

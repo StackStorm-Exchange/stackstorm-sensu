@@ -1,6 +1,6 @@
 ---
 name: check_info
-runner_type: run-python
+runner_type: python-script
 description: Get Sensu check info
 enabled: true
 entry_point: check_info.py
