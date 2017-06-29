@@ -10,7 +10,7 @@
       pattern: "st2actionrunner_check"
       type: "equals"
     trigger.check.output:
-      pattern: "CheckProcs CRITICAL*"
+      pattern: "CheckProcess CRITICAL*"
       type: "matchregex"
   action:
     ref: "core.local"
