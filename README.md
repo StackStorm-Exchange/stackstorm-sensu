@@ -65,6 +65,7 @@ Here are step-by-step instructions:
 
     ```
     cd /etc/sensu/handlers/
+    source /opt/stackstorm/virtualenvs/sensu/bin/activate
     echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | ./st2_handler.py ./st2_handler.conf --verbose
     # You'd see something like the following if the test succeeds.
     Sent sensu event to st2. HTTP_CODE: 202
@@ -137,15 +138,22 @@ Here are step-by-step instructions:
 ### Example
 Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch for StackStorm action runners, `st2actionrunners`, fire an event when it's less then 10. StackStorm will catch the event and trigger an action. A simple action that dumps the event payload to the file will suffice as example; in production the action will be a troubleshooting or remediation workflow.
 
-1. If Sensu `check_procs.rb` check plugin is not yet installed, install it now (look up Sensu [docs here](https://sensuapp.org/docs/0.20/getting-started-with-checks#install-dependencies) for CentOS/RHEL version):
+Before proceeding further, please ensure you have the latest version of Ruby installed.
+
+1. If Sensu `check_process.rb` check plugin is not yet installed, install it now (look up Sensu [docs here](http://sensu-plugins.io/docs/installation_instructions.html) for more details):
 
     ```
-    sudo apt-get update
-    sudo apt-get install ruby ruby-dev
-    sudo gem install sensu-plugin
+    sudo gem install sensu-plugins-process-checks
+    ```
 
-    sudo wget -O /etc/sensu/plugins/check-procs.rb http://sensuapp.org/docs/0.20/files/check-procs.rb
-    sudo chmod +x /etc/sensu/plugins/check-procs.rb
+Test to ensure `check-process.rb` is working as expected. Assuming there are two currently executing st2actionrunner processes, you should see the following
+output:
+
+    ```
+    root@2e1d15fd5d07:/# check-process.rb -p st2actionrunner -c 2
+    CheckProcess OK: Found 2 matching processes; cmd /st2actionrunner/
+    root@2e1d15fd5d07:/# check-process.rb -p st2actionrunner -c 1
+    CheckProcess CRITICAL: Found 2 matching processes; cmd /st2actionrunner/
     ```
 
 2. Create a Sensu check json like below. This check watches for keeping StackStorm action runners count at 10, and fires an event if the number of runners is less than 10. Note that is using `st2` handler.
@@ -156,7 +164,7 @@ Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch
       "checks": {
         "st2actionrunner_check": {
           "handlers": ["default", "st2"],
-          "command": "/etc/sensu/plugins/check-procs.rb -p st2actionrunner -C 10 ",
+          "command": "/etc/sensu/plugins/check-process.rb -p st2actionrunner -C 2 ",
           "interval": 60,
           "subscribers": [ "test" ]
         }
@@ -181,14 +189,14 @@ Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch
     sudo service sensu-server restart
     sudo service sensu-client restart
     ```
-    At this point sensu should be
+    At this point sensu should be running.
 
 3. Now back to StackStorm. Create StackStorm rule definition (This sample is a part of the pack, [`rules/sample.on_action_runner_check.yaml`](rules/sample.on_action_runner_check.yaml)):
 
     ```yaml
     cat /opt/stackstorm/packs/sensu/rules/sample.on_action_runner_check
     ---
-      name: sample.on_actoin_runner_check
+      name: sample.on_action_runner_check
       description: Sample rule that dogfoods st2.
       pack: sensu
       trigger:
@@ -198,7 +206,7 @@ Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch
           pattern: "st2actionrunner_check"
           type: "equals"
         trigger.check.output:
-          pattern: "CheckProcs CRITICAL*"
+          pattern: "CheckProcess CRITICAL*"
           type: "matchregex"
       action:
         ref: "core.local"
@@ -215,11 +223,11 @@ Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch
     ```
     StackStorm is now waiting for Sensu event.
 
-4. Fire it up: create a Sensu event by Killing an st2actionrunner process.
+4. Fire it up: create a Sensu event by Starting an st2actionrunner process.
 
     ```
     ps auxww | grep st2actionrunner
-    sudo kill <pick any pid from the output above>
+    sudo service st2actionrunner stop
     ```
     Wait for sensu event to be triggered - check [Uchiwa](https://github.com/sensu/uchiwa) if you have it, or watch the log:
     ```
@@ -227,20 +235,6 @@ Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch
     ```
 
     Watch the action triggered in StackStorm: `st2 execution list`.  and verify the result by ckecking the file created by the action:
-
-    ```
-    cat /tmp/sensu-sample.out
-    {'client': {'timestamp': 1440745086, 'version': '0.20.3', 'name': 'test', 'address':
-     'localhost', 'subscriptions': ['test']}, 'occurrences': 17, 'action': 'create',
-     'timestamp': 1440745095, 'check': {'status': 2, 'executed': 1440745095,
-     'total_state_change': 4, 'handlers': ['default', 'st2'], 'issued': 1440745095,
-     'interval': 60, 'command': '/etc/sensu/plugins/check-procs.rb -p st2actionrunner
-     -C 10 ', 'subscribers': ['test'], 'duration': 0.057, 'output': 'CheckProcs CRITICAL:
-     Found 8 matching processes; cmd /st2actionrunner/\n', 'history': ['0', '0', '0',
-     '0', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2', '2',
-     '2'], 'name': 'st2actionrunner_check'}, 'id':'a1723d77-6afe-4555-8bae-7a8423e8a26d'}
-    ...
-    ```
 
     You can also see that the rule triggered an action in StackStorm UI, under History tab.
 
@@ -251,4 +245,3 @@ Let's take monitoring StackStorm itself for end-to-end example. Sensu will watch
     ```
 
 Enjoy StackStorm with Sensu!
-
