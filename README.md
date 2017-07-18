@@ -1,4 +1,4 @@
-#Sensu Integration Pack
+# Sensu Integration Pack
 
 Integrates with [Sensu](http://sensuapp.org/) monitoring framework.
 
@@ -56,8 +56,8 @@ Here are step-by-step instructions:
     sudo cp /opt/stackstorm/packs/sensu/etc/st2_handler.py /etc/sensu/handlers/st2_handler.py
     sudo cp /opt/stackstorm/packs/sensu/etc/st2_handler.conf /etc/sensu/handlers/st2_handler.conf
     sudo chmod +x /etc/sensu/handlers/st2_handler.py
-```
-	If Sensu is running on another box, these are the files to get to that box.
+    ```
+    If Sensu is running on another box, these are the files to get to that box.
 
 2. Set up StackStorm endpoints and credentials in [`st2_handler.conf`](etc/st2_handler.conf).
 
