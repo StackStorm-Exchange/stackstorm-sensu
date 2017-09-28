@@ -44,39 +44,27 @@ to `/opt/stackstorm/configs/sensu.yaml` and edit as required. It must contain:
 
 ### Configure Sensu to send events to StackStorm
 
-StackStorm Sensu handler `st2_handler.py` is installed on Sensu and sends all **relevant** events to StackStorm. Use Sensu configuration to define **relevant** events.
+There is a [Sensu Plugins for the StackStorm](https://github.com/sensu-plugins/sensu-plugins-stackstorm). This plugin has a [Sensu Event Handler](https://sensuapp.org/docs/latest/reference/handlers.html) which is named `st2_handler.rb`, it sends all **relevant** events to StackStorm. Use Sensu configuration to define **relevant** events.
 
-On StackStorm side, Sensu events will fire a Sensu trigger on each received event. The `sensu.event_handler` trigger type is auto-registered by the handler; you can run the `st2_handler.py` manually to get the trigger created. Once created, you can see the trigger(http://docs.stackstorm.com/rules.html#trigger) with `st2 trigger list --pack=sensu`. It now can be used in StackStorm [Rules](http://docs.stackstorm.com/rules.html) to define what actions to take on which events, based on supplied criteria.
+On StackStorm side, Sensu events will fire a Sensu trigger on each received event. The `sensu.event_handler` trigger type is auto-registered by the handler; you can run the `st2_handler.rb` manually to get the trigger created. Once created, you can see the [trigger](http://docs.stackstorm.com/rules.html#trigger) with `st2 trigger list --pack=sensu`. It now can be used in StackStorm [Rules](http://docs.stackstorm.com/rules.html) to define what actions to take on which events, based on supplied criteria.
 
 Here are step-by-step instructions:
 
-1. Copy StackStorm Sensu handler and config to Sensu handlers dir:
+1. Install the Sensu StackStorm Plugin by the `sensu-install` command
 
     ```
-    sudo cp /opt/stackstorm/packs/sensu/etc/st2_handler.py /etc/sensu/handlers/st2_handler.py
-    sudo cp /opt/stackstorm/packs/sensu/etc/st2_handler.conf /etc/sensu/handlers/st2_handler.conf
-    sudo chmod +x /etc/sensu/handlers/st2_handler.py
+    sudo sensu-install -p stackstorm
     ```
-    If Sensu is running on another box, these are the files to get to that box.
 
-2. Set up StackStorm endpoints and credentials in [`st2_handler.conf`](etc/st2_handler.conf).
+2. Set up StackStorm endpoints and credentials according to [this document](https://github.com/sensu-plugins/sensu-plugins-stackstorm#configuration).
 
-3. Test the handler manually.
-
-    ```
-    cd /etc/sensu/handlers/
-    source /opt/stackstorm/virtualenvs/sensu/bin/activate
-    echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | ./st2_handler.py ./st2_handler.conf --verbose
-    # You'd see something like the following if the test succeeds.
-    Sent sensu event to st2. HTTP_CODE: 202
-    ```
-4. Note that handler invocation auto-creates Sensu trigger type on StackStorm side. Ensure that the Sensu trigger is created on StackStorm:
+3. Note that handler invocation auto-creates Sensu trigger type on StackStorm side. Ensure that the Sensu trigger is created on StackStorm:
 
     ```
     st2 trigger list --pack=sensu
     ```
 
-5. Create and configure Sensu StackStorm handler - call it `st2` - for sending Sensu events to StackStorm:
+4. Create and configure Sensu StackStorm handler - call it `st2` - for sending Sensu events to StackStorm:
 
     ```json
     cat /etc/sensu/conf.d/handler_st2.json
@@ -84,13 +72,13 @@ Here are step-by-step instructions:
       "handlers": {
         "st2": {
           "type": "pipe",
-          "command": "/etc/sensu/handlers/st2_handler.py /etc/sensu/handlers/st2_handler.conf"
+          "command": "/opt/sensu/embedded/bin/st2_handler.rb"
         }
       }
     }
     ```
 
-6. Add `st2` handler to `handlers` field of desired sensu checks to route events to StackStorm. Here is how to add st2 handler to Sensu memory check:
+5. Add `st2` handler to `handlers` field of desired sensu checks to route events to StackStorm. Here is how to add st2 handler to Sensu memory check:
 
     ```json
     cat /etc/sensu/conf.d/check_memory.json
@@ -119,20 +107,20 @@ Here are step-by-step instructions:
    this is not recommended, you can use this for local testing.
 
    ```
-   echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | ./st2_handler.py ./st2_handler.conf --unauthed
+   echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | /opt/sensu/embedded/bin/st2_handler.rb --unauthed
    ```
 2. The handler also supports turning on/off ssl verification for all API requests to st2. By
    default, SSL verification is turned off as evaluation versions of st2 ship with self-signed
    certs. To turn on ssl verify, use ```--ssl-verify``` option.
 
    ```
-   echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | ./st2_handler.py ./st2_handler.conf --ssl-verify
+   echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | /opt/sensu/embedded/bin/st2_handler.rb --ssl-verify
    ```
 
 3. If for whatever reason, you've to debug the handler, you can use the --verbose option.
 
    ```
-   echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | ./st2_handler.py ./st2_handler.conf --verbose
+   echo '{"client": {"name": 1}, "check":{"name": 2}, "id": "12345"}' | /opt/sensu/embedded/bin/st2_handler.rb --verbose
    ```
 
 ### Example
