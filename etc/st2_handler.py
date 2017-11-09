@@ -14,7 +14,7 @@ from urlparse import urljoin
 
 try:
     import requests
-    requests.packages.urllib3.disable_warnings()
+    requests.packages.urllib3.disable_warnings()  # pylint: disable=no-member
 except ImportError:
     raise ImportError('Missing dependency "requests". \
         Do ``pip install requests``.')
