@@ -131,7 +131,7 @@ def _create_trigger_type(verbose=False):
                   (url, payload, headers))
         post_resp = requests.post(url, data=json.dumps(payload),
                                   headers=headers, verify=ST2_SSL_VERIFY)
-    except:
+    except Exception:
         traceback.print_exc(limit=20)
         raise Exception('Unable to connect to st2 endpoint %s.' % url)
     else:
@@ -165,7 +165,7 @@ def _get_auth_token(verbose=False):
     try:
         resp = requests.post(auth_url, json.dumps({'ttl': 5 * 60}),
                              auth=(ST2_USERNAME, ST2_PASSWORD), verify=ST2_SSL_VERIFY)
-    except:
+    except Exception:
         traceback.print_exc(limit=20)
         raise Exception('Unable to connect to st2 endpoint %s.' % auth_url)
     else:
@@ -201,7 +201,7 @@ def _register_trigger_with_st2(verbose=False):
             body = json.loads(get_resp.text)
             if len(body) == 0:
                 _create_trigger_type(verbose=verbose)
-    except:
+    except Exception:
         traceback.print_exc(limit=20)
         raise Exception('Unable to connect to st2 endpoint %s.' % triggers_url)
     else:
@@ -234,7 +234,7 @@ def _post_webhook(url, body, verbose=False):
         if verbose:
             print('Webhook POST: url: %s, headers: %s, body: %s\n' % (url, headers, body))
         r = requests.post(url, data=json.dumps(body), headers=headers, verify=False)
-    except:
+    except Exception:
         raise Exception('Cannot connect to st2 endpoint %s.' % url)
     else:
         status = r.status_code
@@ -257,7 +257,7 @@ def _post_event_to_st2(payload, verbose=False):
 
     try:
         body['payload'] = json.loads(payload)
-    except:
+    except Exception:
         print('Invalid JSON payload %s.' % payload)
         sys.exit(3)
 
@@ -271,7 +271,7 @@ def _post_event_to_st2(payload, verbose=False):
         try:
             _post_webhook(url=_get_st2_webhooks_url(), body=body, verbose=verbose)
             return True
-        except:
+        except Exception:
             traceback.print_exc(limit=20)
             print('Cannot send event to st2.')
             sys.exit(4)
@@ -286,7 +286,7 @@ def _register_with_st2(verbose=False):
                 print('Checking if trigger %s registered with st2.' % ST2_TRIGGERTYPE_REF)
             _register_trigger_with_st2(verbose=verbose)
             REGISTERED_WITH_ST2 = True
-    except:
+    except Exception:
         traceback.print_exc(limit=20)
         sys.stderr.write(
             'Failed registering with st2. Won\'t post event.\n')
@@ -350,7 +350,7 @@ def _set_config_opts(config_file, verbose=False, unauthed=False, ssl_verify=Fals
                 if verbose:
                     print('No auth token found. Let\'s get one from StackStorm!')
                 ST2_AUTH_TOKEN = _get_auth_token(verbose=verbose)
-        except:
+        except Exception:
             traceback.print_exc(limit=20)
             print('Unable to negotiate an auth token. Exiting!')
             sys.exit(1)
