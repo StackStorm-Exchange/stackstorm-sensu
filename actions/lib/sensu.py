@@ -11,7 +11,7 @@ def parseOutput(r):
         for c in r.json():
             output[c['name']] = c
         return json.dumps(output)
-    except:
+    except Exception:
         return r.text
 
 
