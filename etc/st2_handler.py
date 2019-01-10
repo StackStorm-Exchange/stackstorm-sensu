@@ -70,7 +70,7 @@ def _get_sensu_request_headers():
     b64auth = base64.b64encode(
         six.b("%s:%s") %
         (SENSU_USER, SENSU_PASS))
-    auth_header = "BASIC %s" % b64auth
+    auth_header = six.b("BASIC %s" % (b64auth.decode('utf-8')))
     content_header = "application/json"
     return {"Authorization": auth_header, "Content-Type": content_header}
 
