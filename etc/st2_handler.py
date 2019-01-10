@@ -124,11 +124,11 @@ def _get_st2_request_headers():
 def _create_trigger_type(verbose=False):
     try:
         url = _get_st2_triggers_base_url()
-        payload = OrderedDict({
-            'name': ST2_TRIGGERTYPE_NAME,
-            'pack': ST2_TRIGGERTYPE_PACK,
-            'description': 'Trigger type for sensu event handler.'
-        })
+        payload = OrderedDict([
+            ('name', ST2_TRIGGERTYPE_NAME),
+            ('pack', ST2_TRIGGERTYPE_PACK),
+            ('description', 'Trigger type for sensu event handler.')
+        ])
 
         headers = _get_st2_request_headers()
         headers['Content-Type'] = 'application/json; charset=utf-8'
