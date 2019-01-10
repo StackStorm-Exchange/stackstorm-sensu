@@ -124,8 +124,8 @@ class SensuHandlerTestCase(unittest2.TestCase):
         sensu_handler.ST2_API_BASE_URL = 'https://localhost/api/v1/'
         sensu_handler._create_trigger_type()
         requests.post.assert_called_once_with('https://localhost/api/v1/triggertypes',
-            data='{"description": "Trigger type for sensu event handler.", ' +
-                 '"name": "event_handler", "pack": "sensu"}',
+            data='{"name": "event_handler", "pack": "sensu", "description": '
+                 '"Trigger type for sensu event handler."}',
             headers={'Content-Type': 'application/json; charset=utf-8'}, verify=False)
 
     @mock.patch.object(requests, 'post', mock.MagicMock(
@@ -135,8 +135,8 @@ class SensuHandlerTestCase(unittest2.TestCase):
         sensu_handler.ST2_SSL_VERIFY = True
         sensu_handler._create_trigger_type()
         requests.post.assert_called_with('https://localhost/api/v1/triggertypes',
-            data='{"description": "Trigger type for sensu event handler.", ' +
-                 '"name": "event_handler", "pack": "sensu"}',
+            data='{"name": "event_handler", "pack": "sensu", "description": '
+                 '"Trigger type for sensu event handler."}',
             headers={'Content-Type': 'application/json; charset=utf-8'}, verify=True
         )
 

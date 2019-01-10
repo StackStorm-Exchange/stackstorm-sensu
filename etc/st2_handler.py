@@ -3,6 +3,8 @@
 import argparse
 import base64
 
+from collections import OrderedDict
+
 try:
     import simplejson as json
 except ImportError:
@@ -68,8 +70,7 @@ API_KEY_AUTH_HEADER = 'St2-Api-Key'
 
 def _get_sensu_request_headers():
     b64auth = base64.b64encode(
-        six.b("%s:%s") %
-        (SENSU_USER, SENSU_PASS))
+        six.b("%s:%s" % (SENSU_USER, SENSU_PASS)))
     auth_header = six.b("BASIC %s" % (b64auth.decode('utf-8')))
     content_header = "application/json"
     return {"Authorization": auth_header, "Content-Type": content_header}
@@ -123,11 +124,11 @@ def _get_st2_request_headers():
 def _create_trigger_type(verbose=False):
     try:
         url = _get_st2_triggers_base_url()
-        payload = {
+        payload = OrderedDict({
             'name': ST2_TRIGGERTYPE_NAME,
             'pack': ST2_TRIGGERTYPE_PACK,
             'description': 'Trigger type for sensu event handler.'
-        }
+        })
 
         headers = _get_st2_request_headers()
         headers['Content-Type'] = 'application/json; charset=utf-8'
