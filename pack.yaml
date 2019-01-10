@@ -7,5 +7,8 @@ keywords:
   - monitoring
   - alerting
 version: 0.5.2
+python_versions:
+  - "2"
+  - "3"
 author : StackStorm, Inc.
 email : info@stackstorm.com
