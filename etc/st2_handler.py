@@ -2,6 +2,7 @@
 
 import argparse
 import base64
+
 try:
     import simplejson as json
 except ImportError:
@@ -10,6 +11,7 @@ import os
 import sys
 import traceback
 
+import six
 from six.moves.urllib import parse as urlparse
 from six.moves import http_client
 
@@ -66,7 +68,7 @@ API_KEY_AUTH_HEADER = 'St2-Api-Key'
 
 def _get_sensu_request_headers():
     b64auth = base64.b64encode(
-        "%s:%s" %
+        six.b("%s:%s") %
         (SENSU_USER, SENSU_PASS))
     auth_header = "BASIC %s" % b64auth
     content_header = "application/json"
