@@ -56,6 +56,7 @@ REGISTERED_WITH_ST2 = False
 UNAUTHED = False
 IS_API_KEY_AUTH = False
 
+# pylint: disable=no-member
 OK_CODES = [http_client.OK, http_client.CREATED, http_client.ACCEPTED, http_client.CONFLICT]
 UNREACHABLE_CODES = [http_client.NOT_FOUND]
 
@@ -198,7 +199,7 @@ def _register_trigger_with_st2(verbose=False):
             print('Request headers: %s' % headers)
         get_resp = requests.get(triggers_url, headers=headers, verify=ST2_SSL_VERIFY)
 
-        if get_resp.status_code != http_client.OK:
+        if get_resp.status_code != http_client.OK:  # pylint: disable=no-member
             _create_trigger_type(verbose=verbose)
         else:
             body = json.loads(get_resp.text)
