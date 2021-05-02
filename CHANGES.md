@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.0.1
+
+* Fix duplicated "pack" key in rule definition.
+
 # 1.0.0
 
 * Drop Python 2.7 support
