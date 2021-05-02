@@ -2,7 +2,6 @@
   name: "on_action_runner_check"
   pack: "sensu"
   description: Sample rule that dogfoods st2.
-  pack: sensu
   trigger:
     type: sensu.event_handler
   criteria:
