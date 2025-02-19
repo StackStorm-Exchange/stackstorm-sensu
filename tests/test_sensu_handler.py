@@ -3,7 +3,7 @@ import json
 import mock
 import requests
 import responses
-import unittest2
+import unittest
 
 # XXX: This file uses a lot of globals and shared state.
 # We should definitely refactor this at some
@@ -30,7 +30,7 @@ class FakeResponse(object):
         raise Exception(self.reason)
 
 
-class SensuHandlerTestCase(unittest2.TestCase):
+class SensuHandlerTestCase(unittest.TestCase):
 
     def test_st2_headers_token_auth(self):
         sensu_handler.IS_API_KEY_AUTH = False

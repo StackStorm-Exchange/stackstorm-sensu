@@ -1,5 +1,9 @@
 # Change Log
 
+# 1.0.2
+
+* Updated files to work with latest CI updates
+
 # 1.0.1
 
 * Fix duplicated "pack" key in rule definition.
